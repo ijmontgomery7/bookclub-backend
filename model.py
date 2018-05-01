@@ -13,4 +13,9 @@ class Book(object):
     def save(self, db):
         db.insert(self.__dict__)
 
+    def update(self, db, user):
+        self.voters.remove(user)
+        db.update_one({'name': self.name},{"$set": self.__dict__}, upsert=False)
 
+    def delete(self, db):
+        db.remove(self.__dict__)
