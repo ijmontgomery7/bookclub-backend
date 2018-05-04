@@ -19,13 +19,14 @@ and users for verification purposes
 ```xml
 
  <setup>
-    <username></username>
-    <password></password>
-    <sever></server>
+    <username>atlas username</username>
+    <password>atlas password</password>
+    <sever>atlas db url here</server>
     <names>
         <name>Verfied User</name>
         <name>Verfied User</name>
     </names>
+    <limit>int of how many books a user can post goes here</limit>
 </setup>
 
 ```
