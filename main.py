@@ -72,7 +72,7 @@ class BookApi(Resource):
             abort(400, message='user has not voted for ' + bookName)
 
         book.update(books_db, user)
-        return {'message': user + ' vote has been removed'}\
+        return {'message': user + ' vote has been removed'}
 
 
     def delete(self, bookName):
