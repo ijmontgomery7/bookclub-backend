@@ -2,6 +2,7 @@ import requests
 import unittest
 import xml.etree.ElementTree
 from pprint import pprint
+from main import clear
 
 
 def postTest():
@@ -23,4 +24,6 @@ def postTest():
 
 
 if __name__ == '__main__':
+    clear()
     postTest()
+

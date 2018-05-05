@@ -21,6 +21,7 @@ user_db = MongoClient(clientURL).db["users"]
 
 for item in root[3]:
         user_db.insert({'name': item.text, 'proposed': 0})
+        print(user_db.find_one({'name': item.text}))
 
 bookParser = reqparse.RequestParser()
 bookParser.add_argument('user', required=True, type=str, help='the current user selected from dropdown menu')
@@ -35,10 +36,12 @@ class BookApi(Resource):
 
     def post(self, bookName):
         args = bookParser.parse_args()
+        db_user = user_db.find_one({'name': args['user']})
 
-        user = User(user_db.find_one({'name': args['user']}))
-        if not user:
-            abort(404, message=user.name + 'not found')
+        if not db_user:
+            abort(404, message= 'user not found')
+
+        user = User(db_user)
 
         current = books_db.find_one({'name': bookName})
         if current:
@@ -83,7 +86,7 @@ class BookApi(Resource):
         if len(book.voters) > 0:
             abort(400, message=bookName + ' has voters left')
         owner = User(user_db.find_one({'name': book.proposer}))
-        owner.proposed += 1
+        owner.proposed -= 1
         owner.update(user_db)
         book.delete(books_db)
         return {'message': bookName + ' has been deleted'}
@@ -91,13 +94,17 @@ class BookApi(Resource):
 class BooksApi(Resource):
 
     def get(self):
+        print(books_db.find({}))
         return{books_db.find({})}
 
 
 class UsersApi(Resource):
 
-    def get(self):
-        return {'users': user_db.find({})}
+    def get(self): 
+        
+        users = user_db.find({})
+        print(users)
+        return {'users': users}
 
 api.add_resource(BookApi, '/shelf/<bookName>')
 api.add_resource(BooksApi, '/shelf')
