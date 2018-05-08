@@ -42,7 +42,9 @@ class BookApi(Resource):
         current = books_db.find_one({'name': bookName})
         if current:
             book = Book(current)
-            if user in book.voters:
+            print(book.voters)
+            print(user.name)
+            if user.name in book.voters:
                 abort(400, message='user has already voted for ' + bookName)
             book.addVoter(user, books_db)
             return {'message': user.name + ' has voted for ' + bookName}

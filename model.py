@@ -8,7 +8,7 @@ class Book(object):
         self.proposer = dict['proposer']
 
     def addVoter(self, user, db):
-        self.voters.append(user)
+        self.voters.append(user.name)
         db.insert(self.__dict__)
 
     def save(self, db):
