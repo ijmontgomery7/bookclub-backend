@@ -29,7 +29,7 @@ class User(object):
         self.proposed = dict['proposed']
 
     def propose(self):
-        self.proposed = self.proposed + 1
+        self.proposed += 1
 
     def save(self, db):
         db.insert(self.__dict__)

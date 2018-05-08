@@ -18,18 +18,15 @@ limit = int(root[4].text)
 
 books_db = MongoClient(clientURL).db["books"]
 user_db = MongoClient(clientURL).db["users"]
+books_db.drop()
+user_db.drop()
 
 for item in root[3]:
         user_db.insert({'name': item.text, 'proposed': 0})
-        print(user_db.find_one({'name': item.text}))
 
 bookParser = reqparse.RequestParser()
 bookParser.add_argument('user', required=True, type=str, help='the current user selected from dropdown menu')
 
-
-def clear():
-    books_db.drop()
-    user_db.drop()
 
 
 class BookApi(Resource):
@@ -42,7 +39,6 @@ class BookApi(Resource):
             abort(404, message= 'user not found')
 
         user = User(db_user)
-
         current = books_db.find_one({'name': bookName})
         if current:
             book = Book(current)
@@ -54,8 +50,8 @@ class BookApi(Resource):
         else:
             if user.proposed <= limit:
 
-                book = Book({'voters': [user.name], 'name': bookName, 'proposer': user})
-                User.propose()
+                book = Book({'voters': [user.name], 'name': bookName, 'proposer': user.name})
+                user.propose()
                 book.save(books_db)
                 return {'message': 'book ' + bookName + ' submitted'}
             else:
@@ -94,17 +90,21 @@ class BookApi(Resource):
 class BooksApi(Resource):
 
     def get(self):
-        print(books_db.find({}))
-        return{books_db.find({})}
 
+        returnStatement = {'shelf': []}
+        for item in books_db.find():
+            returnStatement['shelf'].append(Book(item).__dict__)
+        return returnStatement
 
 class UsersApi(Resource):
 
-    def get(self): 
-        
-        users = user_db.find({})
-        print(users)
-        return {'users': users}
+    def get(self):
+
+        returnStatement = {'users':[]}
+        for item in user_db.find():
+            returnStatement['users'].append(User(item).__dict__)
+
+        return returnStatement
 
 api.add_resource(BookApi, '/shelf/<bookName>')
 api.add_resource(BooksApi, '/shelf')
@@ -112,4 +112,3 @@ api.add_resource(UsersApi, '/users')
 
 if __name__ == '__main__':
     app.run()
-    clear()
