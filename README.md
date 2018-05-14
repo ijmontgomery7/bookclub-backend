@@ -21,7 +21,7 @@ and users for verification purposes
  <setup>
     <username>atlas username</username>
     <password>atlas password</password>
-    <sever>atlas db url here</server>
+    <server>atlas db url here</server>
     <names>
         <name>Verfied User</name>
         <name>Verfied User</name>
