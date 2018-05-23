@@ -7,7 +7,7 @@ make sure to run
 pip install requests
 pip install flask
 pip install flask-restful
-pip install pymongo
+pip install pymongo[gssapi,srv,tls]
 ```
 
 
